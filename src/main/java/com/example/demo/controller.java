@@ -2,18 +2,15 @@ package com.example.demo;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.sound.midi.Soundbank;
-
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.util.HtmlUtils;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
  
 @SpringBootApplication
 
@@ -29,11 +26,12 @@ public class controller {
     }
 
     @RequestMapping("/ayuda")
-    public String ayuda (HttpServletRequest req) {
+    public String ayuda (HttpServletRequest req, HttpServletResponse resp) {
         String params = StreamSupport.stream(
             ((Iterable<String>) () -> req.getParameterNames().asIterator()).spliterator(), false)
             .map(pName -> pName + '=' + req.getParameter(pName))
             .collect(Collectors.joining("&"));
-            return req.getRequestURI() + '?' + params;      
+            // resp.getWriter().write(params);
+            return "<h1>" + req.getRequestURI() + '?' + HtmlUtils.htmlEscape(params) + "</h1>";      
     }
 }
